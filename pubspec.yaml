@@ -1,0 +1,33 @@
+name: jeet_ke_jeo
+description: A new Flutter project.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.1.0 <4.0.0"
+
+dependencies:
+  accordion: ^2.6.0
+  convex_bottom_bar: ^3.2.0
+  firebase_auth: ^4.10.0
+  firebase_core: ^2.16.0
+  flutter:
+    sdk: flutter
+  flutter_launcher_icons: ^0.12.0
+  flutter_native_splash: ^2.2.19
+  flutter_svg: ^2.0.7
+  google_fonts: ^6.1.0
+  intl_phone_number_input: ^0.7.3+1
+  velocity_x: ^4.1.1
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/card/
+    - assets/images/prizes/
