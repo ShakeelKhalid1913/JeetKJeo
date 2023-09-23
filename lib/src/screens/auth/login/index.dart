@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:jeet_ke_jeo/src/config/constants/colors.dart';
-import 'package:jeet_ke_jeo/src/services/firebase/auth_services/index.dart';
+import 'package:jeet_ke_jeo/src/services/firebase/auth.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,6 +15,19 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuthService _auth = FirebaseAuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  void _login() async {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      Navigator.pushNamed(context, '/home');
+    } else {
+      debugPrint("Sign In failed");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,18 +121,5 @@ class _LoginScreenState extends State<LoginScreen> {
                 .scrollVertical()
           ].stack()),
     );
-  }
-
-  void _login() async {
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
-
-    if (user != null) {
-      Navigator.pushNamed(context, '/home');
-    } else {
-      debugPrint("Sign In failed");
-    }
   }
 }

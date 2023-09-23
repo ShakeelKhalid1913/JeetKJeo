@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jeet_ke_jeo/src/config/constants/colors.dart';
-import 'package:jeet_ke_jeo/src/services/firebase/auth_services/index.dart';
+import 'package:jeet_ke_jeo/src/services/firebase/auth.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SignupScreen extends StatefulWidget {

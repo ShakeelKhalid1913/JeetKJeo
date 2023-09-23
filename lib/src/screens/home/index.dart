@@ -3,6 +3,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:jeet_ke_jeo/src/screens/history/index.dart';
 import 'package:jeet_ke_jeo/src/screens/home/widgets/lottery.widget.dart';
 import 'package:jeet_ke_jeo/src/screens/tutorial/index.dart';
+import 'package:jeet_ke_jeo/src/services/firebase/auth.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,10 +14,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int index = 1;
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  int _index = 1;
 
-  Widget getCurrentScreen() {
-    switch (index) {
+  void _logout() async {
+    await _auth.logout();
+    Navigator.pushNamed(context, '/login');
+  }
+
+  Widget _getCurrentScreen() {
+    switch (_index) {
       case 0:
         return const PlayTutorialScreen();
       case 1:
@@ -36,14 +43,14 @@ class _HomeScreenState extends State<HomeScreen> {
         title: 'Jeet Ke Jeo'.text.make(),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: _logout,
               icon: const Icon(
                 Icons.logout,
                 size: 30,
               )),
         ],
       ),
-      body: getCurrentScreen()
+      body: _getCurrentScreen()
           .scrollVertical()
           .hFull(context)
           .wFull(context)
@@ -55,13 +62,13 @@ class _HomeScreenState extends State<HomeScreen> {
         activeColor: const Color(0xFFDDA74F),
         style: TabStyle.reactCircle,
         items: const [
-          TabItem(icon: Icons.trolley, title: 'How to play'),
+          TabItem(icon: Icons.trolley, title: 'Tutorial'),
           TabItem(icon: Icons.home, title: 'Home'),
           TabItem(icon: Icons.draw, title: 'History'),
         ],
-        initialActiveIndex: index,
+        initialActiveIndex: _index,
         onTap: (int i) => setState(() {
-          index = i;
+          _index = i;
         }),
       ),
     );

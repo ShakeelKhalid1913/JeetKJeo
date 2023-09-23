@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:jeet_ke_jeo/src/config/constants/colors.dart';
+import 'package:jeet_ke_jeo/src/models/user.model.dart';
+import 'package:jeet_ke_jeo/src/services/firebase/auth.dart';
+import 'package:jeet_ke_jeo/src/services/firebase/collections/user.collection.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PurchaseLottery extends StatefulWidget {
@@ -13,30 +17,65 @@ class PurchaseLottery extends StatefulWidget {
 }
 
 class _PurchaseLotteryState extends State<PurchaseLottery> {
-  final TextEditingController phoneController = TextEditingController();
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  final FirebaseUserCollection _collection = FirebaseUserCollection();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   String initialCountry = 'PK';
   PhoneNumber number = PhoneNumber(isoCode: 'PK');
 
+  void saveUserInformation() async {
+    User? user = await _auth.getCurrentUser();
+
+    if (user != null) {
+      String uid = user.uid;
+      String username = _usernameController.text;
+      String address = _addressController.text;
+      String phone = _phoneController.text;
+
+      var userModel = UserModel(
+          uid: uid, username: username, address: address, phone: phone);
+      _collection.addUser(userModel.toJson());
+
+      VxToast.show(context, msg: "User information saved successfully");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Purchase Lottery'),
-      ),
+      appBar: AppBar(),
       body: [
-        "Purchase\nLottery".text.color(Colors.white).xl6.make().box.make(),
-        const SizedBox(height: 20),
-        "Only 500/Rs"
+        "Purchase Lottery"
             .text
-            .color(Colors.white)
-            .xl3
-            .textStyle(GoogleFonts.robotoMono())
+            .color(AppColors.blackColor)
+            .xl4
+            .make()
+            .centered()
+            .box
+            .rounded
+            .white
+            .make()
+            .wFourFifth(context),
+        const SizedBox(height: 20),
+        "Only 500/-Rs"
+            .text
+            .white
+            .xl6
+            .textStyle(GoogleFonts.shadowsIntoLight(
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ))
             .make()
             .box
+            .alignCenterLeft
             .make(),
         const SizedBox(height: 20),
         VxTextField(
+          controller: _usernameController,
           style: const TextStyle(color: Colors.black),
           hint: "Enter Username",
           hintStyle: const TextStyle(color: Colors.black),
@@ -50,6 +89,7 @@ class _PurchaseLotteryState extends State<PurchaseLottery> {
         ),
         const SizedBox(height: 20),
         VxTextField(
+          controller: _addressController,
           maxLine: 3,
           style: const TextStyle(color: Colors.black),
           hint: "Enter Address",
@@ -66,7 +106,7 @@ class _PurchaseLotteryState extends State<PurchaseLottery> {
         InternationalPhoneNumberInput(
           countries: const ['PK', 'US'],
           onInputChanged: (PhoneNumber number) {
-            print(number.phoneNumber);
+            // print(number.phoneNumber);
           },
           selectorConfig: const SelectorConfig(
             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
@@ -75,7 +115,7 @@ class _PurchaseLotteryState extends State<PurchaseLottery> {
           autoValidateMode: AutovalidateMode.disabled,
           selectorTextStyle: const TextStyle(color: Colors.black),
           initialValue: number,
-          textFieldController: phoneController,
+          textFieldController: _phoneController,
           formatInput: true,
           keyboardType: const TextInputType.numberWithOptions(
               signed: true, decimal: true),
